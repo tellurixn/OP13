@@ -67,7 +67,7 @@ public class XlsBook {
     public void setResearchDate(String time){
         writeValue(time, 15,22);
     }
-    private void writeValue(String value, int rowIndex, int cellIndex){
+    public void writeValue(String value, int rowIndex, int cellIndex){
         Sheet sheet = workbook.getSheetAt(0);
 
         // Получаем объединенную ячейку
@@ -84,7 +84,31 @@ public class XlsBook {
 
     }
 
-    private void writeValue(int value, int rowIndex, int cellIndex){
+    public void writeValue(int value, int rowIndex, int cellIndex){
+        Sheet sheet = workbook.getSheetAt(0);
+
+        // Получаем объединенную ячейку
+        Cell cell = sheet.getRow(rowIndex).getCell(cellIndex);
+
+        // Создаем стиль для выравнивания по центру
+        CellStyle centeredStyle = workbook.createCellStyle();
+        centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        // Создаем объект шрифта и задаем размер
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short) 9); // Задаем размер шрифта
+
+        // Применяем шрифт к стилю
+        centeredStyle.setFont(font);
+
+        // Устанавливаем новое значение для ячейки
+        cell.setCellValue(value);
+        cell.setCellStyle(centeredStyle); // Применяем стиль
+
+
+    }
+
+    public void writeValue(double value, int rowIndex, int cellIndex){
         Sheet sheet = workbook.getSheetAt(0);
 
         // Получаем объединенную ячейку

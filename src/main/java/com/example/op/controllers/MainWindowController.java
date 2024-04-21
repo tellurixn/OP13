@@ -160,7 +160,38 @@ public class MainWindowController {
     private ObservableList<TotalData> totalList = FXCollections.observableArrayList();
     private ObservableList<AboutData> aboutList = FXCollections.observableArrayList();
     private ObservableList<FinalSumData> finalSumList = FXCollections.observableArrayList();
-
+    private int countAllWithSalt(){
+        int res = 0;
+        for(AboutData data : aboutList){
+            if(data.getName().equals("Соль"))
+                res++;
+        }
+        return res;
+    }
+    private int countAllWithoutSalt(){
+        int res = 0;
+        for(AboutData data : aboutList){
+            if(!data.getName().equals("Соль"))
+                res++;
+        }
+        return res;
+    }
+    private double countAllWithSaltSum(){
+        double res = 0;
+        for(AboutData data : aboutList){
+            if(data.getName().equals("Соль"))
+                res += data.getSum();
+        }
+        return res;
+    }
+    private double countAllWithoutSaltSum(){
+        double res = 0;
+        for(AboutData data : aboutList){
+            if(!data.getName().equals("Соль"))
+                res += data.getSum();
+        }
+        return res;
+    }
     private double countAllReminderStart(){
         double result = 0;
         for(TableData data : mainList)
@@ -226,7 +257,8 @@ public class MainWindowController {
     void initialize() {
         products = new HashMap<>();
         products.put("Соль",new Product("Соль", 1,10));
-        products.put("Специи", new Product("Специи", 2,15));
+        products.put("Перец", new Product("Перец", 2,15));
+        products.put("Горчица", new Product("Горчица", 3,15));
 
         for(String product : products.keySet())
             addButton.getItems().add(product);
@@ -304,6 +336,7 @@ public class MainWindowController {
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xls"));
                 String selectedDirectory = fileChooser.showSaveDialog(stage).toString();
 
+                //--------------------Shapka-------------------------//
                 XlsBook xls = new XlsBook(selectedDirectory);
                 xls.setOrganizationName(organizationName.getText());
                 xls.setNumber(Integer.parseInt(number.getText()));
@@ -314,7 +347,51 @@ public class MainWindowController {
                 xls.setPeriodReceipt(receiptDate.getValue().toString());
                 xls.setTypeOfDeal(Integer.parseInt(typeOfDeal.getText()));
                 xls.setTypeOfOperation(Integer.parseInt(typeOfOperation.getText()));
-                xls.save();
+
+                //-----------------Products--------------------//
+                int rowIndex = 24;
+                for(int i = 0; i < mainList.size(); i++){
+
+                    xls.writeValue(i+1, rowIndex, 0);
+                    xls.writeValue(mainList.get(i).getName(), rowIndex, 4);
+                    xls.writeValue(mainList.get(i).getCode(), rowIndex, 18);
+                    xls.writeValue(mainList.get(i).getReminderStart(), rowIndex, 22);
+                    xls.writeValue(mainList.get(i).getAdded(), rowIndex, 29);
+                    xls.writeValue(mainList.get(i).getReminderReceipt(), rowIndex, 36);
+                    xls.writeValue(mainList.get(i).getUsed(), rowIndex, 44);
+                    rowIndex++;
+                }
+
+                //--------------------Itogo--------------------------//
+                rowIndex = 31;
+                xls.writeValue(totalList.get(0).getTotalReminderStart(),rowIndex,22);
+                xls.writeValue(totalList.get(0).getTotalReminderReceipt(),rowIndex,36);
+                xls.writeValue(totalList.get(0).getTotalAdded(),rowIndex,29);
+                xls.writeValue(totalList.get(0).getTotalUsed(),rowIndex,44);
+
+                //-------------------Spravka-------------------------//
+                for(Product product : products.values()){
+                    if(product.getName().equals("Соль")){
+                        double fractionalPart = product.getCost() % 1; // Дробная часть
+                        double integerPart = product.getCost() - fractionalPart; // Целая часть
+                        xls.writeValue(integerPart, 39,2);
+                        xls.writeValue(fractionalPart, 39,19);
+                    }
+                    else {
+                        double fractionalPart = product.getCost() % 1; // Дробная часть
+                        double integerPart = product.getCost() - fractionalPart; // Целая часть
+                        xls.writeValue(integerPart, 42,2);
+                        xls.writeValue(fractionalPart, 42,19);
+                    }
+                }
+                xls.writeValue(countAllWithoutSalt(),39,30);
+                xls.writeValue(countAllWithoutSaltSum(),39,37);
+
+                xls.writeValue(countAllWithSaltSum(),41,30);
+                xls.writeValue(countAllWithSaltSum(),41,37);
+
+                xls.writeValue(finalSumList.get(2).getSum(),46,37);
+                xls.writeValue(finalSumList.get(1).getSum(),45,37);
 
                 try {
                     xls.getWorkbook().write(xls.getFileOut());
@@ -351,7 +428,8 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setReminderStart(newValue);
-
+            rowData.setUsed(rowData.getReminderStart() + rowData.getAdded() - rowData.getReminderReceipt());
+            mainTable.refresh();
             updateTotalTable();
         });
 
@@ -362,7 +440,8 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setReminderReceipt(newValue);
-
+            rowData.setUsed(rowData.getReminderStart() + rowData.getAdded() - rowData.getReminderReceipt());
+            mainTable.refresh();
             updateTotalTable();
         });
 
@@ -373,7 +452,8 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setAdded(newValue);
-
+            rowData.setUsed(rowData.getReminderStart() + rowData.getAdded() - rowData.getReminderReceipt());
+            mainTable.refresh();
             updateTotalTable();
         });
 
