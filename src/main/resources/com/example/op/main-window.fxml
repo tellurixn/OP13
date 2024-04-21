@@ -24,7 +24,7 @@
                                     <columns>
                                         <TableColumn fx:id="nameColumn" minWidth="-1.0" prefWidth="110.99999237060547" sortable="false" text="Наименование" />
                                         <TableColumn fx:id="codeColumn" minWidth="-1.0" prefWidth="44.0" sortable="false" text="Код" />
-                                        <TableColumn fx:id="reminderStartColumn" minWidth="-1.0" onEditCommit="#reminderStartChanged" prefWidth="253.33334350585938" sortable="false" text="Остаток на начало ОП (сумма), руб." />
+                                        <TableColumn fx:id="reminderStartColumn" minWidth="-1.0" prefWidth="253.33334350585938" sortable="false" text="Остаток на начало ОП (сумма), руб." />
                                         <TableColumn fx:id="addedColumn" minWidth="-1.0" prefWidth="209.66668701171875" sortable="false" text="Поступило за ОП (сумма), руб." />
                                         <TableColumn fx:id="reminterReceiptColumn" minWidth="-1.0" prefWidth="214.33331298828125" sortable="false" text="Остаток на конец ОП (сумма), руб." />
                                         <TableColumn fx:id="usedColumn" minWidth="-1.0" prefWidth="320.66668701171875" sortable="false" text="Израсходовано за отчетный период (сумма). руб." />

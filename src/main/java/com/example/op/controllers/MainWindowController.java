@@ -1,12 +1,12 @@
 package com.example.op.controllers;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import com.example.op.models.AboutData;
-import com.example.op.models.FinalSumData;
-import com.example.op.models.TableData;
-import com.example.op.models.TotalData;
+import com.example.op.models.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -204,11 +204,16 @@ public class MainWindowController {
         return result;
     }
 
+    private HashMap<String,Product> products;
 
     @FXML
     void initialize() {
-        addButton.getItems().addAll("Соль", "Специи");
+        products = new HashMap<>();
+        products.put("Соль",new Product("Соль", 1,10));
+        products.put("Специи", new Product("Специи", 2,15));
 
+        for(String product : products.keySet())
+            addButton.getItems().add(product);
 
 
         // Настройка cellValueFactory для каждого столбца finalAboutTable
@@ -255,16 +260,13 @@ public class MainWindowController {
 
 
         addButton.getSelectionModel().selectedItemProperty().addListener((option, oldValue, newValue) -> {
-            if(newValue.equals("Соль")) {
-                mainList.add(new TableData(newValue, 1, 0, 0, 0, 0));
-                aboutList.add(new AboutData(newValue, 0, 10, 0));
+            Product selected = products.get(newValue);
 
-                updateTotalTable();
-            }
-            else if (newValue.equals("Специи")) {
-                mainList.add(new TableData(newValue, 2, 0, 0, 0, 0));
-                aboutList.add(new AboutData(newValue, 0, 15, 0));
-            }
+            mainList.add(new TableData(selected.getName(), selected.getCode(), 0, 0, 0, 0));
+            aboutList.add(new AboutData(selected.getName(), 0, selected.getCost(), 0));
+
+            updateTotalTable();
+
         });
 
         //---------------------------Main Table----------------------------------//
@@ -350,8 +352,9 @@ public class MainWindowController {
             int row = pos.getRow();
             AboutData rowData = event.getTableView().getItems().get(row);
             rowData.setCount(newValue);
-
-            //todo дописать логику подсчета суммы и обновления таблицы с итогом
+            rowData.setSum(newValue * rowData.getCost());
+            aboutTable.refresh();
+            updateFinalSumTable();
         });
 
         aboutCostColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
@@ -361,11 +364,13 @@ public class MainWindowController {
             int row = pos.getRow();
             AboutData rowData = event.getTableView().getItems().get(row);
             rowData.setCost(newValue);
+            rowData.setSum(newValue * rowData.getCount());
+            aboutTable.refresh();
+            updateFinalSumTable();
 
-            //todo дописать логику подсчета суммы и обновления таблицы с итогом
         });
 
-        aboutSumColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        /*aboutSumColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         aboutSumColumn.setOnEditCommit(event -> {
             TablePosition<AboutData, Double> pos = event.getTablePosition();
             Double newValue = event.getNewValue();
@@ -374,7 +379,7 @@ public class MainWindowController {
             rowData.setSum(newValue);
 
 
-        });
+        });*/
         //--------------------------------------------------------------------------//
 
         aboutTable.setEditable(true);
