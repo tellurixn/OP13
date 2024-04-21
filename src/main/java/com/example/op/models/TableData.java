@@ -1,14 +1,12 @@
 package com.example.op.models;
 
-import java.time.LocalDate;
 
-
-public class tableData {
+public class TableData {
     private String name;
     private int code;
-    private LocalDate reminderStart;
+    private double reminderStart;
     private double added;
-    private LocalDate reminderReceipt;
+    private double reminderReceipt;
     private double used;
     private int count;
 
@@ -29,11 +27,11 @@ public class tableData {
         this.code = code;
     }
 
-    public LocalDate getReminderStart() {
+    public double getReminderStart() {
         return reminderStart;
     }
 
-    public void setReminderStart(LocalDate reminderStart) {
+    public void setReminderStart(double reminderStart) {
         this.reminderStart = reminderStart;
     }
 
@@ -45,11 +43,11 @@ public class tableData {
         this.added = added;
     }
 
-    public LocalDate getReminderReceipt() {
+    public double getReminderReceipt() {
         return reminderReceipt;
     }
 
-    public void setReminderReceipt(LocalDate reminderReceipt) {
+    public void setReminderReceipt(double reminderReceipt) {
         this.reminderReceipt = reminderReceipt;
     }
 
@@ -69,20 +67,20 @@ public class tableData {
         this.count = count;
     }
 
-    public tableData(){
+    public TableData(){
         this.name = "";
         this.added = 0f;
-        this.reminderReceipt = LocalDate.now();
-        this.reminderStart =  LocalDate.now();
+        this.reminderReceipt = 0f;
+        this.reminderStart =  0f;
         this.code = 0;
         this.used = 0f;
     }
 
-    public tableData(
+    public TableData(
             String name,
             int code,
-            LocalDate reminderStart,
-            LocalDate reminderReceipt,
+            double reminderStart,
+            double reminderReceipt,
             double added,
             double used
             ){
