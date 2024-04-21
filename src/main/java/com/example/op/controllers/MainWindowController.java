@@ -203,7 +203,15 @@ public class MainWindowController {
 
     private void updateFinalSumTable(){
         finalSumList.set(0, new FinalSumData(countAllSum()));
+        finalSumList.set(1, new FinalSumData("Израсходовано согласно КР", totalList.get(0).getTotalUsed()));
+
+        double nedorashod = 0;
+        nedorashod = finalSumList.get(0).getSum() - finalSumList.get(1).getSum();
+        nedorashod = nedorashod > 0 ? nedorashod : 0;
+        finalSumList.set(2, new FinalSumData("Сумма недорасхода", nedorashod));
     }
+
+
     private double countAllSum(){
         double result = 0;
         for(AboutData data : aboutList)
@@ -229,6 +237,8 @@ public class MainWindowController {
         finalAboutSumColumn.setCellValueFactory(new PropertyValueFactory<>("sum"));
 
         finalSumList.add(new FinalSumData());
+        finalSumList.add(new FinalSumData("Израсходовано согласно КР", 0));
+        finalSumList.add(new FinalSumData("Сумма недорасхода", 0));
         aboutFinalTable.setItems(finalSumList);
         aboutFinalTable.refresh();
 
@@ -376,6 +386,7 @@ public class MainWindowController {
             rowData.setUsed(newValue);
 
             updateTotalTable();
+            updateFinalSumTable();
         });
 
         //------------------------About Table--------------------------//

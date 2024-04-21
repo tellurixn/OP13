@@ -29,4 +29,9 @@ public class FinalSumData {
         this.label = "Итого";
         this.sum = sum;
     }
+
+    public FinalSumData(String label, double sum){
+        this.label = label;
+        this.sum = sum;
+    }
 }
