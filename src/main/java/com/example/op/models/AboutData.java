@@ -51,4 +51,7 @@ public class AboutData {
         this.cost = cost;
         this.count = count;
     }
+
+
 }
+

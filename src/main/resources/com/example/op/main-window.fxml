@@ -32,11 +32,11 @@
                                 </TableView>
                                 <TableView fx:id="finalMainTeble" layoutY="242.0" prefHeight="57.0" prefWidth="1150.0" stylesheets="@стили/table.css">
                                     <columns>
-                                        <TableColumn fx:id="finalColumn" minWidth="-1.0" prefWidth="110.99999237060547" />
-                                        <TableColumn fx:id="finalReminderStartColumn" minWidth="-1.0" prefWidth="248.0" text="Остаток на начало ОП (сумма) руб." />
-                                        <TableColumn fx:id="finalAddedColumn" minWidth="-1.0" prefWidth="252.0" text="Поступило за ОП (сумма) руб." />
-                                        <TableColumn fx:id="finalreminderReceiptColumn" minWidth="-1.0" prefWidth="236.0" text="Остаток на конец ОП (сумма) руб." />
-                                        <TableColumn fx:id="finalUsedColumn" minWidth="-1.0" prefWidth="301.0" text="Израсходавано за ОП (сумма) руб." />
+                                        <TableColumn fx:id="finalColumn" editable="false" minWidth="-1.0" prefWidth="110.99999237060547" sortable="false" />
+                                        <TableColumn fx:id="finalReminderStartColumn" editable="false" minWidth="-1.0" prefWidth="248.0" sortable="false" text="Остаток на начало ОП (сумма) руб." />
+                                        <TableColumn fx:id="finalAddedColumn" editable="false" minWidth="-1.0" prefWidth="252.0" sortable="false" text="Поступило за ОП (сумма) руб." />
+                                        <TableColumn fx:id="finalreminderReceiptColumn" editable="false" minWidth="-1.0" prefWidth="236.0" sortable="false" text="Остаток на конец ОП (сумма) руб." />
+                                        <TableColumn fx:id="finalUsedColumn" editable="false" minWidth="-1.0" prefWidth="301.0" sortable="false" text="Израсходавано за ОП (сумма) руб." />
                                     </columns>
                                 </TableView>
                                 <ComboBox fx:id="addButton" prefWidth="150.0" promptText="Добавить" stylesheets="@стили/buttons.css" visibleRowCount="5" />
@@ -50,16 +50,16 @@
                             <children>
                                 <TableView fx:id="aboutTable" prefHeight="208.0" prefWidth="1150.0" stylesheets="@стили/table.css">
                                     <columns>
-                                        <TableColumn fx:id="aboutNameColumn" minWidth="-1.0" prefWidth="273.0" text="Наименование (Код)" />
-                                        <TableColumn fx:id="aboutCostColumn" minWidth="-1.0" prefWidth="320.0" text="Стоимость блюда" />
-                                        <TableColumn fx:id="aboutCountColumn" minWidth="-1.0" prefWidth="254.0" text="Количество блюд" />
-                                        <TableColumn fx:id="aboutSumColumn" minWidth="-1.0" prefWidth="302.0" text="Сумма (руб.)" />
+                                        <TableColumn fx:id="aboutNameColumn" editable="false" minWidth="-1.0" prefWidth="273.0" sortable="false" text="Наименование (Код)" />
+                                        <TableColumn fx:id="aboutCostColumn" minWidth="-1.0" prefWidth="320.0" sortable="false" text="Стоимость блюда" />
+                                        <TableColumn fx:id="aboutCountColumn" minWidth="-1.0" prefWidth="254.0" sortable="false" text="Количество блюд" />
+                                        <TableColumn fx:id="aboutSumColumn" minWidth="-1.0" prefWidth="302.0" sortable="false" text="Сумма (руб.)" />
                                     </columns>
                                 </TableView>
                                 <TableView fx:id="aboutFinalTable" layoutY="242.0" prefHeight="105.0" prefWidth="1150.0" stylesheets="@стили/table.css">
                                     <columns>
-                                        <TableColumn fx:id="finalAboutColumn" minWidth="-1.0" prefWidth="567.0" />
-                                        <TableColumn fx:id="finalAboutSumColumn" minWidth="-1.0" prefWidth="582.0" text="Сумма (руб.)" />
+                                        <TableColumn fx:id="finalAboutColumn" editable="false" minWidth="-1.0" prefWidth="567.0" sortable="false" />
+                                        <TableColumn fx:id="finalAboutSumColumn" editable="false" minWidth="-1.0" prefWidth="582.0" sortable="false" text="Сумма (руб.)" />
                                     </columns>
                                 </TableView>
                             </children></AnchorPane>

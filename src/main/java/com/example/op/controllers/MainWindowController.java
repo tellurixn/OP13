@@ -7,6 +7,7 @@ import com.example.op.models.AboutData;
 import com.example.op.models.FinalSumData;
 import com.example.op.models.TableData;
 import com.example.op.models.TotalData;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -147,20 +148,67 @@ public class MainWindowController {
     @FXML
     private TableColumn<TableData, Double> usedColumn;
 
-    @FXML
-    void reminderStartChanged(ActionEvent event) {
-        System.out.println("changed ---------------------------------");
+    private ObservableList<TableData> mainList = FXCollections.observableArrayList();
+    private ObservableList<TotalData> totalList = FXCollections.observableArrayList();
+    private ObservableList<AboutData> aboutList = FXCollections.observableArrayList();
+    private ObservableList<FinalSumData> finalSumList = FXCollections.observableArrayList();
 
+    private double countAllReminderStart(){
+        double result = 0;
+        for(TableData data : mainList)
+            result += data.getReminderStart();
+
+        return result;
     }
+
+    private double countAllReminderReceipt(){
+        double result = 0;
+        for(TableData data : mainList)
+            result += data.getReminderReceipt();
+
+        return result;
+    }
+
+    private double countAllAdded(){
+        double result = 0;
+        for(TableData data : mainList)
+            result += data.getAdded();
+
+        return result;
+    }
+
+    private double countAllUsed(){
+        double result = 0;
+        for(TableData data : mainList)
+            result += data.getUsed();
+
+        return result;
+    }
+
+    private void updateTotalTable(){
+        totalList.set(0, new TotalData(
+                countAllReminderStart(),
+                countAllReminderReceipt(),
+                countAllAdded(),
+                countAllUsed()));
+    }
+
+    private void updateFinalSumTable(){
+        finalSumList.set(0, new FinalSumData(countAllSum()));
+    }
+    private double countAllSum(){
+        double result = 0;
+        for(AboutData data : aboutList)
+            result += data.getSum();
+
+        return result;
+    }
+
 
     @FXML
     void initialize() {
         addButton.getItems().addAll("Соль", "Специи");
 
-        ObservableList<TableData> mainList = FXCollections.observableArrayList();
-        ObservableList<TotalData> totalList = FXCollections.observableArrayList();
-        ObservableList<AboutData> aboutList = FXCollections.observableArrayList();
-        ObservableList<FinalSumData> finalSumList = FXCollections.observableArrayList();
 
 
         // Настройка cellValueFactory для каждого столбца finalAboutTable
@@ -210,6 +258,8 @@ public class MainWindowController {
             if(newValue.equals("Соль")) {
                 mainList.add(new TableData(newValue, 1, 0, 0, 0, 0));
                 aboutList.add(new AboutData(newValue, 0, 10, 0));
+
+                updateTotalTable();
             }
             else if (newValue.equals("Специи")) {
                 mainList.add(new TableData(newValue, 2, 0, 0, 0, 0));
@@ -217,7 +267,7 @@ public class MainWindowController {
             }
         });
 
-
+        //---------------------------Main Table----------------------------------//
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         nameColumn.setOnEditCommit(event -> {
             TablePosition<TableData, String> pos = event.getTablePosition();
@@ -243,6 +293,8 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setReminderStart(newValue);
+
+            updateTotalTable();
         });
 
         reminterReceiptColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
@@ -252,6 +304,8 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setReminderReceipt(newValue);
+
+            updateTotalTable();
         });
 
         addedColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
@@ -261,6 +315,8 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setAdded(newValue);
+
+            updateTotalTable();
         });
 
         usedColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
@@ -270,9 +326,58 @@ public class MainWindowController {
             int row = pos.getRow();
             TableData rowData = event.getTableView().getItems().get(row);
             rowData.setUsed(newValue);
+
+            updateTotalTable();
         });
 
+        //------------------------About Table--------------------------//
 
+        aboutNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        aboutNameColumn.setOnEditCommit(event -> {
+            TablePosition<AboutData, String> pos = event.getTablePosition();
+            String newValue = event.getNewValue();
+            int row = pos.getRow();
+            AboutData rowData = event.getTableView().getItems().get(row);
+            rowData.setName(newValue);
+
+
+        });
+
+        aboutCountColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        aboutCountColumn.setOnEditCommit(event -> {
+            TablePosition<AboutData, Integer> pos = event.getTablePosition();
+            Integer newValue = event.getNewValue();
+            int row = pos.getRow();
+            AboutData rowData = event.getTableView().getItems().get(row);
+            rowData.setCount(newValue);
+
+            //todo дописать логику подсчета суммы и обновления таблицы с итогом
+        });
+
+        aboutCostColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        aboutCostColumn.setOnEditCommit(event -> {
+            TablePosition<AboutData, Double> pos = event.getTablePosition();
+            Double newValue = event.getNewValue();
+            int row = pos.getRow();
+            AboutData rowData = event.getTableView().getItems().get(row);
+            rowData.setCost(newValue);
+
+            //todo дописать логику подсчета суммы и обновления таблицы с итогом
+        });
+
+        aboutSumColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        aboutSumColumn.setOnEditCommit(event -> {
+            TablePosition<AboutData, Double> pos = event.getTablePosition();
+            Double newValue = event.getNewValue();
+            int row = pos.getRow();
+            AboutData rowData = event.getTableView().getItems().get(row);
+            rowData.setSum(newValue);
+
+
+        });
+        //--------------------------------------------------------------------------//
+
+        aboutTable.setEditable(true);
         mainTable.setEditable(true);
     }
 

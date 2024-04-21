@@ -24,4 +24,9 @@ public class FinalSumData {
         label = "Итого";
         sum = 0;
     }
+
+    public FinalSumData(double sum){
+        this.label = "Итого";
+        this.sum = sum;
+    }
 }

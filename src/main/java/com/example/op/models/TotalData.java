@@ -54,4 +54,12 @@ public class TotalData {
         totalReminderReceipt = 0;
         totalUsed = 0;
     }
+
+    public TotalData(double totalReminderStart, double totalReminderReceipt, double totalAdded, double totalUsed){
+        name = "Итого";
+        this.totalReminderStart = totalReminderStart;
+        this.totalReminderReceipt = totalReminderReceipt;
+        this.totalUsed = totalUsed;
+        this.totalAdded = totalAdded;
+    }
 }
