@@ -1,5 +1,9 @@
 package com.example.op.controllers;
 
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,11 +15,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -268,6 +276,44 @@ public class MainWindowController {
             updateTotalTable();
 
         });
+
+        saveAsButton.setOnMouseClicked( e -> {
+            if(number.getText().isBlank() || organizationName.getText().isBlank() || okpo.getText().isBlank() ||
+            typeOfDeal.getText().isBlank() || typeOfOperation.getText().isBlank() || subdivision.getText().isBlank() ||
+            releaseDate.getValue() == null || startDate.getValue() == null || receiptDate.getValue() == null){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Что-то пошло не так..");
+                alert.setHeaderText("Не все данные заполненны!");
+                alert.setContentText("Проверьте все ли поля заполненны");
+                alert.showAndWait();
+            }else {
+                //Отктытие окна
+                Stage stage = new Stage();
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Выберите путь сохранения файла..");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xls"));
+                String selectedDirectory = fileChooser.showSaveDialog(stage).toString();
+
+                XlsBook xls = new XlsBook(selectedDirectory);
+                xls.setOrganizationName(organizationName.getText());
+                xls.setNumber(Integer.parseInt(number.getText()));
+                xls.setOKPO(Integer.parseInt(okpo.getText()));
+                xls.setSubdivision(subdivision.getText());
+                xls.setResearchDate(releaseDate.getValue().toString());
+                xls.setPeriodStart(startDate.getValue().toString());
+                xls.setPeriodReceipt(receiptDate.getValue().toString());
+                xls.setTypeOfDeal(Integer.parseInt(typeOfDeal.getText()));
+                xls.setTypeOfOperation(Integer.parseInt(typeOfOperation.getText()));
+                xls.save();
+
+                try {
+                    xls.getWorkbook().write(xls.getFileOut());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
 
         //---------------------------Main Table----------------------------------//
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());

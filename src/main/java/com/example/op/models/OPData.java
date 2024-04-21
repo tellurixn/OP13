@@ -9,6 +9,10 @@ public class OPData {
     private String name;
     private String subdivision;
     private String typeOfOperation;
+    private String typeOfDeal;
+    private LocalDate researchDate;
+    private LocalDate startDate;
+    private LocalDate receiptDate;
 
     public int getNumber() {
         return number;
@@ -82,8 +86,5 @@ public class OPData {
         this.receiptDate = receiptDate;
     }
 
-    private String typeOfDeal;
-    private LocalDate researchDate;
-    private LocalDate startDate;
-    private LocalDate receiptDate;
+
 }
