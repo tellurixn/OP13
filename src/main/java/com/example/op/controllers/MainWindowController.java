@@ -3,10 +3,13 @@ package com.example.op.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.example.op.models.AboutData;
+import com.example.op.models.FinalSumData;
 import com.example.op.models.TableData;
 import com.example.op.models.TotalData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,25 +31,25 @@ public class MainWindowController {
     private AnchorPane aboutAnchor;
 
     @FXML
-    private TableColumn<?, ?> aboutCostColumn;
+    private TableColumn<AboutData, Double> aboutCostColumn;
 
     @FXML
-    private TableColumn<?, ?> aboutCountColumn;
+    private TableColumn<AboutData, Integer> aboutCountColumn;
 
     @FXML
-    private TableView<?> aboutFinalTable;
+    private TableView<FinalSumData> aboutFinalTable;
 
     @FXML
-    private TableColumn<?, ?> aboutNameColumn;
+    private TableColumn<AboutData, String> aboutNameColumn;
 
     @FXML
-    private TableColumn<?, ?> aboutSumColumn;
+    private TableColumn<AboutData, Double> aboutSumColumn;
 
     @FXML
     private Tab aboutTab;
 
     @FXML
-    private TableView<?> aboutTable;
+    private TableView<AboutData> aboutTable;
 
     @FXML
     private ComboBox<String> addButton;
@@ -61,10 +64,10 @@ public class MainWindowController {
     private AnchorPane dataAnchor;
 
     @FXML
-    private TableColumn<?, ?> finalAboutColumn;
+    private TableColumn<FinalSumData, String> finalAboutColumn;
 
     @FXML
-    private TableColumn<?, ?> finalAboutSumColumn;
+    private TableColumn<FinalSumData, Double> finalAboutSumColumn;
 
     @FXML
     private TableColumn<TotalData, Double> finalAddedColumn;
@@ -145,13 +148,41 @@ public class MainWindowController {
     private TableColumn<TableData, Double> usedColumn;
 
     @FXML
+    void reminderStartChanged(ActionEvent event) {
+        System.out.println("changed ---------------------------------");
+
+    }
+
+    @FXML
     void initialize() {
         addButton.getItems().addAll("Соль", "Специи");
 
-        ObservableList<TableData> list = FXCollections.observableArrayList();
+        ObservableList<TableData> mainList = FXCollections.observableArrayList();
         ObservableList<TotalData> totalList = FXCollections.observableArrayList();
+        ObservableList<AboutData> aboutList = FXCollections.observableArrayList();
+        ObservableList<FinalSumData> finalSumList = FXCollections.observableArrayList();
 
-        // Настройка cellValueFactory для каждого столбца
+
+        // Настройка cellValueFactory для каждого столбца finalAboutTable
+        finalAboutColumn.setCellValueFactory(new PropertyValueFactory<>("label"));
+        finalAboutSumColumn.setCellValueFactory(new PropertyValueFactory<>("sum"));
+
+        finalSumList.add(new FinalSumData());
+        aboutFinalTable.setItems(finalSumList);
+        aboutFinalTable.refresh();
+
+
+        // Настройка cellValueFactory для каждого столбца aboutTable
+        aboutNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        aboutCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+        aboutCostColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        aboutSumColumn.setCellValueFactory(new PropertyValueFactory<>("sum"));
+
+        aboutTable.setItems(aboutList);
+        aboutTable.refresh();
+
+
+        // Настройка cellValueFactory для каждого столбца totalTable
         finalColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         finalAddedColumn.setCellValueFactory(new PropertyValueFactory<>("totalAdded"));
         finalUsedColumn.setCellValueFactory(new PropertyValueFactory<>("totalUsed"));
@@ -163,7 +194,7 @@ public class MainWindowController {
         finalMainTeble.refresh();
 
 
-        // Настройка cellValueFactory для каждого столбца
+        // Настройка cellValueFactory для каждого столбца mainTable
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
         reminderStartColumn.setCellValueFactory(new PropertyValueFactory<>("reminderStart"));
@@ -171,8 +202,21 @@ public class MainWindowController {
         reminterReceiptColumn.setCellValueFactory(new PropertyValueFactory<>("reminderReceipt"));
         usedColumn.setCellValueFactory(new PropertyValueFactory<>("used"));
 
-        mainTable.setItems(list);
+        mainTable.setItems(mainList);
         mainTable.refresh();
+
+
+        addButton.getSelectionModel().selectedItemProperty().addListener((option, oldValue, newValue) -> {
+            if(newValue.equals("Соль")) {
+                mainList.add(new TableData(newValue, 1, 0, 0, 0, 0));
+                aboutList.add(new AboutData(newValue, 0, 10, 0));
+            }
+            else if (newValue.equals("Специи")) {
+                mainList.add(new TableData(newValue, 2, 0, 0, 0, 0));
+                aboutList.add(new AboutData(newValue, 0, 15, 0));
+            }
+        });
+
 
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         nameColumn.setOnEditCommit(event -> {
@@ -228,18 +272,8 @@ public class MainWindowController {
             rowData.setUsed(newValue);
         });
 
-        addButton.getSelectionModel().selectedItemProperty().addListener((option, oldValue, newValue) -> {
-            if(newValue.equals("Соль"))
-                list.add(new TableData(newValue, 1, 0, 0, 0,0));
-            else if (newValue.equals("Специи"))
-                list.add(new TableData(newValue, 2, 0, 0, 0,0));
-
-        });
-
 
         mainTable.setEditable(true);
-
-
     }
 
 
